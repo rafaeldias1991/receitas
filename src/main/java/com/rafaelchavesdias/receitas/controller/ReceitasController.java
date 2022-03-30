@@ -6,7 +6,6 @@ import com.rafaelchavesdias.receitas.model.Receita;
 import com.rafaelchavesdias.receitas.repository.ReceitaRepository;
 import com.rafaelchavesdias.receitas.repository.TipoDeRecRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,14 +28,13 @@ public class ReceitasController {
     private TipoDeRecRepository tipoDeReceitaRepository;
 
 
-
     @GetMapping
-    public List<ReceitaDto> lista(String nomeReceita){
-        if (nomeReceita == null){
+    public List<ReceitaDto> lista(String nomeReceita) {
+        if (nomeReceita == null) {
             List<Receita> receitas = receitaRepository.findAll();
             return ReceitaDto.converter(receitas);
         } else {
-           // List<Receita> receitas = receitaRepository.findByReceitaNome(nomeReceita);
+            // List<Receita> receitas = receitaRepository.findByReceitaNome(nomeReceita);
             List<Receita> receitas = receitaRepository.findAll();
             return ReceitaDto.converter(receitas);
         }
@@ -44,14 +42,14 @@ public class ReceitasController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<ReceitaDto> cadastrar(@RequestBody @Valid ReceitaForm form, UriComponentsBuilder uriBuilder){
+   // @PreAuthorize("hasRole('ROLE_ADMIN')")
+    public ResponseEntity<ReceitaDto> cadastrar(@RequestBody @Valid ReceitaForm form, UriComponentsBuilder uriBuilder) {
         Receita receita = form.converter();
         receitaRepository.save(receita);
 
         URI uri = uriBuilder.path("/receitas/{id}").buildAndExpand(receita.getId()).toUri();
         return ResponseEntity.created(uri).body(new ReceitaDto(receita));
     }
-
 
 
 }

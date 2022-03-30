@@ -17,19 +17,28 @@ import javax.validation.constraints.Size;
 @Getter
 public class ReceitaForm {
 
-    @NotNull @NotEmpty @Length(min = 5)
+    @NotNull
+    @NotEmpty
+    @Length(min = 5)
     private String nome;
-    @NotNull @NotEmpty @Length(min = 10)
+    @NotNull
+    @NotEmpty
+    @Length(min = 10)
     private String descricao;
-    @NotNull @NotEmpty
+    @NotNull
+    @NotEmpty
     private String tipoDeReceita;
-    @NotNull @NotEmpty @Size(min = 1)
+    @NotNull
+    @NotEmpty
+    @Size(min = 1)
     private Ingrediente[] ingrediente;
-    @NotNull @NotEmpty @Length(min = 10)
+    @NotNull
+    @NotEmpty
+    @Length(min = 10)
     private String preparo;
 
 
-   public Receita converter(){
-        return new Receita(nome,descricao,tipoDeReceita,ingrediente,preparo);
+    public Receita converter() {
+        return new Receita(nome, descricao, tipoDeReceita, ingrediente, preparo);
     }
 }

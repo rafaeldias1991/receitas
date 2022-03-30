@@ -5,7 +5,6 @@ import com.rafaelchavesdias.receitas.repository.UsuarioRepository;
 import com.rafaelchavesdias.receitas.controller.dto.UsuarioDto;
 import com.rafaelchavesdias.receitas.controller.form.UsuarioForm;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
@@ -30,7 +29,7 @@ public class UsuarioController {
 
     @PostMapping
     @Transactional
-    public ResponseEntity<UsuarioDto> cadastrar(@RequestBody @Valid UsuarioForm form, UriComponentsBuilder uriBuilder){
+    public ResponseEntity<UsuarioDto> cadastrar(@RequestBody @Valid UsuarioForm form, UriComponentsBuilder uriBuilder) {
         form.setPassword(encoder.encode(form.getPassword()));
         Usuario usuario = form.converter();
         usuarioRepository.save(usuario);

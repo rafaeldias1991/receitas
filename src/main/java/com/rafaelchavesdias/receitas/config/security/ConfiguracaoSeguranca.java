@@ -16,16 +16,24 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
 @EnableWebSecurity
+@EnableGlobalMethodSecurity(prePostEnabled = true)
 public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
 
-   @Autowired
-   private UserDetailsService userDetailsService;
+    @Autowired
+    private UserDetailsService userDetailsService;
 
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests().anyRequest().permitAll().and()
+
+                .authorizeRequests().anyRequest().authenticated()
+                .and()
+                .formLogin().permitAll()
+                .and()
+                .logout().permitAll()
+                //.antMatchers(HttpMethod.POST,"/receitas").access("ADMIN")
+                .and()
                 .csrf().disable();
 
     }

@@ -15,7 +15,7 @@ public class ReceitaDto {
     private String nome;
     private String descricao;
 
-    public ReceitaDto(Receita receita){
+    public ReceitaDto(Receita receita) {
         this.id = receita.getId();
         this.tipoDeReceita = receita.getTipoDeReceita();
         this.nome = receita.getNome();

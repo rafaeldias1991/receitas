@@ -23,15 +23,13 @@ public class Receita {
 
     private Usuario autor;
 
-    public Receita(String nome, String descricao, String tipoDeReceita,Ingrediente[] ingrediente, String preparo){
+    public Receita(String nome, String descricao, String tipoDeReceita, Ingrediente[] ingrediente, String preparo) {
         this.nome = nome;
         this.descricao = descricao;
         this.tipoDeReceita = tipoDeReceita;
         this.ingrediente = ingrediente;
         this.preparo = preparo;
     }
-
-
 
 
 }

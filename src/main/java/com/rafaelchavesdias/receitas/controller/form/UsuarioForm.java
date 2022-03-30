@@ -15,16 +15,23 @@ import javax.validation.constraints.NotNull;
 @Setter
 public class UsuarioForm {
 
-    @NotNull @NotEmpty @Length(min = 5)
+    @NotNull
+    @NotEmpty
+    @Length(min = 5)
     private String username;
-    @NotNull @NotEmpty @Email
+    @NotNull
+    @NotEmpty
+    @Email
     private String email;
-    @NotNull @NotEmpty @Length(min = 8,max = 15)
+    @NotNull
+    @NotEmpty
+    @Length(min = 8, max = 15)
     private String password;
-    @NotNull @NotEmpty
+    @NotNull
+    @NotEmpty
     private String role;
 
     public Usuario converter() {
-        return new Usuario(username,email,password,role);
+        return new Usuario(username, email, password, role);
     }
 }

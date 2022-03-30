@@ -13,7 +13,7 @@ public class UsuarioDto {
     private String username;
     private String email;
 
-    public UsuarioDto(Usuario usuario){
+    public UsuarioDto(Usuario usuario) {
         this.id = getId();
         this.email = getEmail();
         this.username = getUsername();
