@@ -4,6 +4,7 @@ package com.rafaelchavesdias.receitas.model;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 
@@ -21,6 +22,7 @@ public class Receita {
     private Ingrediente[] ingrediente;
     private String preparo;
 
+    @DBRef
     private Usuario autor;
 
     public Receita(String nome, String descricao, String tipoDeReceita, Ingrediente[] ingrediente, String preparo) {

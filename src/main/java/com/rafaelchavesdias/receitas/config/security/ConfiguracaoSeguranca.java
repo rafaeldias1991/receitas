@@ -27,14 +27,9 @@ public class ConfiguracaoSeguranca extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
 
-                .authorizeRequests().anyRequest().authenticated()
-                .and()
-                .formLogin().permitAll()
-                .and()
-                .logout().permitAll()
-                //.antMatchers(HttpMethod.POST,"/receitas").access("ADMIN")
-                .and()
-                .csrf().disable();
+                .authorizeRequests().antMatchers(HttpMethod.GET,"/receita").permitAll()
+                .antMatchers(HttpMethod.GET,"/usuario").permitAll()
+                .anyRequest().authenticated().and().formLogin();
 
     }
 

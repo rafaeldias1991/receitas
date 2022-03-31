@@ -2,12 +2,18 @@ package com.rafaelchavesdias.receitas.controller;
 
 import com.rafaelchavesdias.receitas.controller.dto.ReceitaDto;
 import com.rafaelchavesdias.receitas.controller.form.ReceitaForm;
+import com.rafaelchavesdias.receitas.controller.form.UsuarioForm;
 import com.rafaelchavesdias.receitas.model.Receita;
-import com.rafaelchavesdias.receitas.repository.ReceitaRepository;
-import com.rafaelchavesdias.receitas.repository.TipoDeRecRepository;
+import com.rafaelchavesdias.receitas.model.Usuario;
+import com.rafaelchavesdias.receitas.service.ReceitaServiceImp;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -15,7 +21,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
+
 
 
 @RestController
@@ -23,33 +29,40 @@ import java.util.List;
 public class ReceitasController {
 
     @Autowired
-    private ReceitaRepository receitaRepository;
-
-    private TipoDeRecRepository tipoDeReceitaRepository;
+    private ReceitaServiceImp receitaServiceImp;
 
 
     @GetMapping
-    public List<ReceitaDto> lista(String nomeReceita) {
+    @Cacheable(value = "listaReceitas")
+    public Page<ReceitaDto> lista(
+            @RequestParam (required = false)String nomeReceita,
+            @PageableDefault(sort = "id",direction = Sort.Direction.ASC) Pageable paginacao) {
         if (nomeReceita == null) {
-            List<Receita> receitas = receitaRepository.findAll();
+            Page<Receita> receitas = receitaServiceImp.obterReceitas(paginacao);
             return ReceitaDto.converter(receitas);
         } else {
-            // List<Receita> receitas = receitaRepository.findByReceitaNome(nomeReceita);
-            List<Receita> receitas = receitaRepository.findAll();
-            return ReceitaDto.converter(receitas);
+            Page<Receita> receita = receitaServiceImp.buscaReceita(nomeReceita,paginacao);
+            return ReceitaDto.converter(receita);
         }
     }
 
     @PostMapping
     @Transactional
-   // @PreAuthorize("hasRole('ROLE_ADMIN')")
-    public ResponseEntity<ReceitaDto> cadastrar(@RequestBody @Valid ReceitaForm form, UriComponentsBuilder uriBuilder) {
+    @CacheEvict(value = "listaReceitas",allEntries = true)
+    public ResponseEntity<ReceitaDto> cadastrar(@RequestParam UsuarioForm forms, @RequestBody @Valid ReceitaForm form, UriComponentsBuilder uriBuilder) {
         Receita receita = form.converter();
-        receitaRepository.save(receita);
-
+        Usuario usuario = forms.converter();
+        receitaServiceImp.criar(receita,usuario);
         URI uri = uriBuilder.path("/receitas/{id}").buildAndExpand(receita.getId()).toUri();
         return ResponseEntity.created(uri).body(new ReceitaDto(receita));
     }
 
+    @DeleteMapping(path = "/delete/{id}")
+    @Transactional
+    @CacheEvict(value = "listaReceitas",allEntries = true)
+    public ResponseEntity<?> delete(@PathVariable("id") String id) {
+        ResponseEntity response = receitaServiceImp.excluir(id);
+        return response;
+    }
 
 }

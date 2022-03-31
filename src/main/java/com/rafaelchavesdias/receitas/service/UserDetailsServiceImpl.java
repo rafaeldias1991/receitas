@@ -32,7 +32,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
             User user = new User(usuario.getUsername(), usuario.getPassword(), authorities);
             return user;
         }
-        return null;
+        throw new UsernameNotFoundException("Dados inválidos !");
     }
 
 

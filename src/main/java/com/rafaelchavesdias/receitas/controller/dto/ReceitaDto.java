@@ -3,6 +3,7 @@ package com.rafaelchavesdias.receitas.controller.dto;
 import com.rafaelchavesdias.receitas.model.Receita;
 import com.rafaelchavesdias.receitas.model.TipoDeReceita;
 import lombok.Getter;
+import org.springframework.data.domain.Page;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -23,7 +24,7 @@ public class ReceitaDto {
     }
 
 
-    public static List<ReceitaDto> converter(List<Receita> receitas) {
-        return receitas.stream().map(ReceitaDto::new).collect(Collectors.toList());
+    public static Page<ReceitaDto> converter(Page<Receita> receitas) {
+        return receitas.map(ReceitaDto::new);
     }
 }
