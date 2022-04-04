@@ -22,17 +22,13 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UsuarioRepository usuarioRepository;
 
     @Override
-    @Transactional
-    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Usuario usuario = usuarioRepository.findByUsername(username);
-        if (usuario != null) {
-            SimpleGrantedAuthority authority = new SimpleGrantedAuthority(usuario.getRole());
-            Set<GrantedAuthority> authorities = new HashSet<>();
-            authorities.add(authority);
-            User user = new User(usuario.getUsername(), usuario.getPassword(), authorities);
-            return user;
+    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+        Optional<Usuario> usuario = usuarioRepository.findByEmail(email);
+        if (usuario.isPresent()) {
+            return usuario.get();
         }
-        throw new UsernameNotFoundException("Dados inválidos !");
+
+        throw new UsernameNotFoundException("Dados inválidos!");
     }
 
 

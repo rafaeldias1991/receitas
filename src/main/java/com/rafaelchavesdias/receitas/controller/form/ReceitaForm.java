@@ -3,6 +3,7 @@ package com.rafaelchavesdias.receitas.controller.form;
 import com.rafaelchavesdias.receitas.model.Ingrediente;
 import com.rafaelchavesdias.receitas.model.Receita;
 import com.rafaelchavesdias.receitas.model.TipoDeReceita;
+import com.rafaelchavesdias.receitas.model.Usuario;
 import com.rafaelchavesdias.receitas.repository.ReceitaRepository;
 import com.rafaelchavesdias.receitas.repository.TipoDeRecRepository;
 import lombok.Getter;
@@ -37,8 +38,10 @@ public class ReceitaForm {
     @Length(min = 10)
     private String preparo;
 
+    private Usuario autor;
+
 
     public Receita converter() {
-        return new Receita(nome, descricao, tipoDeReceita, ingrediente, preparo);
+        return new Receita(nome, descricao, tipoDeReceita, ingrediente, preparo,autor);
     }
 }

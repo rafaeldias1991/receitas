@@ -1,5 +1,7 @@
 package com.rafaelchavesdias.receitas.controller.form;
 
+import com.rafaelchavesdias.receitas.model.Receita;
+import com.rafaelchavesdias.receitas.model.Role;
 import com.rafaelchavesdias.receitas.model.Usuario;
 import lombok.Getter;
 import lombok.Setter;
@@ -31,7 +33,9 @@ public class UsuarioForm {
     @NotEmpty
     private String role;
 
+    private Receita receita;
+
     public Usuario converter() {
-        return new Usuario(username, email, password, role);
+        return new Usuario(username, email, password, role,receita);
     }
 }

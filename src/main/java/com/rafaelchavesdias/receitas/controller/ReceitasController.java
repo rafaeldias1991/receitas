@@ -2,10 +2,9 @@ package com.rafaelchavesdias.receitas.controller;
 
 import com.rafaelchavesdias.receitas.controller.dto.ReceitaDto;
 import com.rafaelchavesdias.receitas.controller.form.ReceitaForm;
-import com.rafaelchavesdias.receitas.controller.form.UsuarioForm;
 import com.rafaelchavesdias.receitas.model.Receita;
-import com.rafaelchavesdias.receitas.model.Usuario;
 import com.rafaelchavesdias.receitas.service.ReceitaServiceImp;
+import com.rafaelchavesdias.receitas.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -14,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.util.UriComponentsBuilder;
@@ -30,6 +30,9 @@ public class ReceitasController {
 
     @Autowired
     private ReceitaServiceImp receitaServiceImp;
+
+    @Autowired
+    private TokenService tokenService;
 
 
     @GetMapping
@@ -49,10 +52,11 @@ public class ReceitasController {
     @PostMapping
     @Transactional
     @CacheEvict(value = "listaReceitas",allEntries = true)
-    public ResponseEntity<ReceitaDto> cadastrar(@RequestParam UsuarioForm forms, @RequestBody @Valid ReceitaForm form, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<ReceitaDto> cadastrar( @RequestBody @Valid ReceitaForm form, UriComponentsBuilder uriBuilder){
+        String nomeAutor = SecurityContextHolder.getContext().getAuthentication().getName();
         Receita receita = form.converter();
-        Usuario usuario = forms.converter();
-        receitaServiceImp.criar(receita,usuario);
+        receitaServiceImp.criar(receita,nomeAutor);
+        //receitaServiceImp.addReceitaUsuario(receita,nomeAutor);
         URI uri = uriBuilder.path("/receitas/{id}").buildAndExpand(receita.getId()).toUri();
         return ResponseEntity.created(uri).body(new ReceitaDto(receita));
     }
@@ -60,8 +64,9 @@ public class ReceitasController {
     @DeleteMapping(path = "/delete/{id}")
     @Transactional
     @CacheEvict(value = "listaReceitas",allEntries = true)
-    public ResponseEntity<?> delete(@PathVariable("id") String id) {
-        ResponseEntity response = receitaServiceImp.excluir(id);
+    public ResponseEntity<?> delete(@PathVariable("id") String id){
+        String nomeAutor = SecurityContextHolder.getContext().getAuthentication().getName();
+        ResponseEntity response = receitaServiceImp.excluir(id,nomeAutor);
         return response;
     }
 

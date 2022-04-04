@@ -25,12 +25,13 @@ public class Receita {
     @DBRef
     private Usuario autor;
 
-    public Receita(String nome, String descricao, String tipoDeReceita, Ingrediente[] ingrediente, String preparo) {
+    public Receita(String nome, String descricao, String tipoDeReceita, Ingrediente[] ingrediente, String preparo,Usuario autor) {
         this.nome = nome;
         this.descricao = descricao;
         this.tipoDeReceita = tipoDeReceita;
         this.ingrediente = ingrediente;
         this.preparo = preparo;
+        this.autor = autor;
     }
 
 

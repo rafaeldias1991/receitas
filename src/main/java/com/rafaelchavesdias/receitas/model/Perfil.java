@@ -1,18 +1,14 @@
 package com.rafaelchavesdias.receitas.model;
 
-import lombok.Getter;
-import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 
-@Getter
-@Setter
-@Document(collection = "Role")
-public class Role implements GrantedAuthority {
+@Document
+public class Perfil implements GrantedAuthority {
 
     @Id
-    private String id;
+    private Long id;
 
     private String nome;
 
