@@ -3,7 +3,7 @@ package com.rafaelchavesdias.receitas.controller;
 import com.rafaelchavesdias.receitas.controller.dto.ReceitaDto;
 import com.rafaelchavesdias.receitas.controller.form.ReceitaForm;
 import com.rafaelchavesdias.receitas.model.Receita;
-import com.rafaelchavesdias.receitas.service.ReceitaServiceImp;
+import com.rafaelchavesdias.receitas.service.receita.ReceitaServiceImp;
 import com.rafaelchavesdias.receitas.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
@@ -56,7 +56,6 @@ public class ReceitasController {
         String nomeAutor = SecurityContextHolder.getContext().getAuthentication().getName();
         Receita receita = form.converter();
         receitaServiceImp.criar(receita,nomeAutor);
-        //receitaServiceImp.addReceitaUsuario(receita,nomeAutor);
         URI uri = uriBuilder.path("/receitas/{id}").buildAndExpand(receita.getId()).toUri();
         return ResponseEntity.created(uri).body(new ReceitaDto(receita));
     }

@@ -22,6 +22,7 @@ public class TokenService {
 
     public String gerarToken(Authentication authentication) {
         Usuario logado = (Usuario) authentication.getPrincipal();
+        System.out.println("Logado"+logado.getId());
         Date hoje = new Date();
         Date dataExpiracao = new Date(hoje.getTime() + Long.parseLong(expiration));
         return Jwts.builder()

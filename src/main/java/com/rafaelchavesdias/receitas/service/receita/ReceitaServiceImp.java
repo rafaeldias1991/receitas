@@ -1,9 +1,10 @@
-package com.rafaelchavesdias.receitas.service;
+package com.rafaelchavesdias.receitas.service.receita;
 
 import com.rafaelchavesdias.receitas.model.Receita;
 import com.rafaelchavesdias.receitas.model.Usuario;
 import com.rafaelchavesdias.receitas.repository.ReceitaRepository;
 import com.rafaelchavesdias.receitas.repository.UsuarioRepository;
+import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,10 +30,9 @@ public class ReceitaServiceImp implements ReceitaService {
     @Override
     public Receita criar(Receita receita, String nomeAutor) {
         Usuario autor = usuarioRepository.findByUsername(nomeAutor);
-        autor.setReceitas(receita);
-       // usuarioRepository.save(autor);
         receita.setAutor(autor);
-        return this.receitaRepository.save(receita);
+        receitaRepository.save(receita);
+        return receita;
     }
 
     @Override
@@ -40,9 +40,9 @@ public class ReceitaServiceImp implements ReceitaService {
         return this.receitaRepository.findByNome(nomeReceita, paginacao);
     }
 
-    public Page<Receita> buscaReceitasPorAutor(String nome,Pageable paginacao){
-        System.out.println(receitaRepository.findByAutor(nome,paginacao));
-        return this.receitaRepository.findByAutor(nome,paginacao);
+    public Page<Receita> buscaReceitasPorAutor(String nome, Pageable paginacao) {
+        ObjectId id = new ObjectId(buscaIdUsuario(nome));
+        return this.receitaRepository.findByAutorUsername(id, paginacao);
     }
 
     @Override
@@ -52,10 +52,10 @@ public class ReceitaServiceImp implements ReceitaService {
         // verifica se tem uma receita com esse id no banco
         if (optional.isPresent()) {
             //verifica se o id do autor da receita e o mesmo do usuario que quer deletar
-        if (autor.getId().equals(optional.get().getAutor().getId())){
-            receitaRepository.deleteById(id);
-            return ResponseEntity.ok().build();
-        }
+            if (autor.getId().equals(optional.get().getAutor().getId())) {
+                receitaRepository.deleteById(id);
+                return ResponseEntity.ok().build();
+            }
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.notFound().build();
@@ -63,12 +63,10 @@ public class ReceitaServiceImp implements ReceitaService {
 
     }
 
-    public void addReceitaUsuario(Receita receita, String nomeAutor) {
-        Usuario autor = usuarioRepository.findByUsername(nomeAutor);
-        Optional<Receita> optional = receitaRepository.findById(receita.getId());
 
-
-
+    public String buscaIdUsuario(String nomeUsuario) {
+        String idUsername = usuarioRepository.findByUsername(nomeUsuario).getId();
+        return idUsername;
     }
 
 

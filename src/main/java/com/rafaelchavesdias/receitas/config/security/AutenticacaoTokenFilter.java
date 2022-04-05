@@ -12,12 +12,11 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.Optional;
 
 public class AutenticacaoTokenFilter extends OncePerRequestFilter {
 
-    private TokenService tokenService;
-    private UsuarioRepository usuarioRepository;
+    private final TokenService tokenService;
+    private final UsuarioRepository usuarioRepository;
 
     public AutenticacaoTokenFilter(TokenService tokenService, UsuarioRepository usuarioRepository) {
         this.tokenService = tokenService;
@@ -29,15 +28,21 @@ public class AutenticacaoTokenFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String token = recuperaToken(request);
         boolean valido = tokenService.isTokenValido(token);
+        System.out.println("%%%%%%%%%%%%%%%%%" + valido );
+
         if (valido) {
+            System.out.println("&&&&&&&&&&&&&&&&&");
             autenticarCliente(token);
         }
         filterChain.doFilter(request, response);
+        System.out.println("$$$$$$$$$$$$$$$$$$$$$$%%%%%%%%" );
+
     }
 
     private void autenticarCliente(String token) {
         String idUsuario = tokenService.getIdUsuario(token);
         Usuario usuario = usuarioRepository.findById(idUsuario).get();
+
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(usuario, null, usuario.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }

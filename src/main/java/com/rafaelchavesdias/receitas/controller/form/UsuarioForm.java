@@ -1,13 +1,10 @@
 package com.rafaelchavesdias.receitas.controller.form;
 
 import com.rafaelchavesdias.receitas.model.Receita;
-import com.rafaelchavesdias.receitas.model.Role;
 import com.rafaelchavesdias.receitas.model.Usuario;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;

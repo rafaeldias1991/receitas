@@ -5,12 +5,15 @@ import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 
 @Getter
@@ -28,7 +31,7 @@ public class Usuario implements UserDetails {
     private String email;
     private String password;
     @DBRef
-    private Receita receitas;
+    private Receita receitas = null;
     private String role;
 
     public Usuario(String username, String email, String password, String role,Receita receitas){
@@ -38,6 +41,7 @@ public class Usuario implements UserDetails {
         this.role = role;
         this.receitas = receitas;
     }
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -1,11 +1,10 @@
-package com.rafaelchavesdias.receitas.service;
+package com.rafaelchavesdias.receitas.service.receita;
 
 import com.rafaelchavesdias.receitas.model.Receita;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 
-import java.util.Optional;
 
 public interface ReceitaService {
 
@@ -17,6 +16,8 @@ public interface ReceitaService {
 
     ResponseEntity excluir(String id, String nomeAutor);
 
+    String buscaIdUsuario(String nomeUsuario);
 
-    void addReceitaUsuario(Receita receita,String nomeAutor);
+    Page<Receita> buscaReceitasPorAutor(String nome,Pageable paginacao);
+
 }

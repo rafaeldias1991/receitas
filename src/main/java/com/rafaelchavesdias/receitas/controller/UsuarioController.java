@@ -1,12 +1,13 @@
 package com.rafaelchavesdias.receitas.controller;
 
+import com.rafaelchavesdias.receitas.config.validacao.ErroEmail;
 import com.rafaelchavesdias.receitas.controller.dto.ReceitaDto;
 import com.rafaelchavesdias.receitas.model.Receita;
 import com.rafaelchavesdias.receitas.model.Usuario;
-import com.rafaelchavesdias.receitas.repository.UsuarioRepository;
 import com.rafaelchavesdias.receitas.controller.dto.UsuarioDto;
 import com.rafaelchavesdias.receitas.controller.form.UsuarioForm;
-import com.rafaelchavesdias.receitas.service.ReceitaServiceImp;
+import com.rafaelchavesdias.receitas.service.receita.ReceitaService;
+import com.rafaelchavesdias.receitas.service.usuario.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -27,32 +28,28 @@ import java.net.URI;
 public class UsuarioController {
 
     @Autowired
-    private UsuarioRepository usuarioRepository;
+    private UsuarioService usuarioService;
     @Autowired
-    private ReceitaServiceImp receitaServiceImp;
+    private ReceitaService receitaService;
 
-    @Autowired
-    private PasswordEncoder encoder;
 
     @PostMapping
     @Transactional
-    public ResponseEntity<UsuarioDto> cadastrar(@RequestBody @Valid UsuarioForm form, UriComponentsBuilder uriBuilder) {
-        form.setPassword(encoder.encode(form.getPassword()));
-        Usuario usuario = form.converter();
-        usuarioRepository.save(usuario);
-
+    public ResponseEntity<?> cadastrar(@RequestBody @Valid UsuarioForm form, UriComponentsBuilder uriBuilder) {
+        Usuario usuario = usuarioService.criaUsuario(form);
+        if (usuario == null){
+            return ResponseEntity.badRequest().body(new ErroEmail(form.getEmail(), "Usuario ja cadastrado no Email"));
+        }
         URI uri = uriBuilder.path("/usuario/{id}").buildAndExpand(usuario.getId()).toUri();
         return ResponseEntity.created(uri).body(new UsuarioDto(usuario));
     }
 
-    @GetMapping
+    @GetMapping("/minhasreceitas")
     public Page<ReceitaDto> listaReceitaUsuario(
-            @PageableDefault(sort = "id",direction = Sort.Direction.ASC) Pageable paginacao) {
+            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable paginacao) {
         String nomeAutor = SecurityContextHolder.getContext().getAuthentication().getName();
-
-            Page<Receita> receitas = receitaServiceImp.buscaReceitasPorAutor(nomeAutor,paginacao);
-            return ReceitaDto.converter(receitas);
-
+        Page<Receita> receitas = receitaService.buscaReceitasPorAutor(nomeAutor, paginacao);
+        return ReceitaDto.converter(receitas);
 
 
     }

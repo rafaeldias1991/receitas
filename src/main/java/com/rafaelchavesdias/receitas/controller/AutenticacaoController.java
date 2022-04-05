@@ -31,6 +31,7 @@ public class AutenticacaoController {
     public ResponseEntity<?> autenticar(@RequestBody @Valid LoginForm form) {
         UsernamePasswordAuthenticationToken dadosLogin = form.converter();
         try {
+
             Authentication authenticate = authManager.authenticate(dadosLogin);
             String token = tokenService.gerarToken(authenticate);
             return ResponseEntity.ok(new TokenDto(token, "Bearer"));
