@@ -4,7 +4,8 @@ import com.rafaelchavesdias.receitas.controller.dto.ReceitaDto;
 import com.rafaelchavesdias.receitas.controller.form.ReceitaForm;
 import com.rafaelchavesdias.receitas.model.Receita;
 import com.rafaelchavesdias.receitas.service.receita.ReceitaServiceImp;
-import com.rafaelchavesdias.receitas.service.TokenService;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
@@ -26,21 +27,23 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/receitas")
+
 public class ReceitasController {
 
-    @Autowired
-    private ReceitaServiceImp receitaServiceImp;
+
+    private final ReceitaServiceImp receitaServiceImp;
 
     @Autowired
-    private TokenService tokenService;
-
+    public ReceitasController(ReceitaServiceImp receitaServiceImp) {
+        this.receitaServiceImp = receitaServiceImp;
+    }
 
     @GetMapping
     @Cacheable(value = "listaReceitas")
     public Page<ReceitaDto> lista(
             @RequestParam (required = false)String nomeReceita,
             @PageableDefault(sort = "id",direction = Sort.Direction.ASC) Pageable paginacao) {
-        if (nomeReceita == null) {
+        if (nomeReceita == null || nomeReceita.isEmpty()) {
             Page<Receita> receitas = receitaServiceImp.obterReceitas(paginacao);
             return ReceitaDto.converter(receitas);
         } else {
@@ -55,9 +58,9 @@ public class ReceitasController {
     public ResponseEntity<ReceitaDto> cadastrar( @RequestBody @Valid ReceitaForm form, UriComponentsBuilder uriBuilder){
         String nomeAutor = SecurityContextHolder.getContext().getAuthentication().getName();
         Receita receita = form.converter();
-        receitaServiceImp.criar(receita,nomeAutor);
+        receitaServiceImp.criar(receita,/*nomeAutor*/"rafael");
         URI uri = uriBuilder.path("/receitas/{id}").buildAndExpand(receita.getId()).toUri();
-        return ResponseEntity.created(uri).body(new ReceitaDto(receita));
+        return ResponseEntity.ok(new ReceitaDto(receita));
     }
 
     @DeleteMapping(path = "/delete/{id}")

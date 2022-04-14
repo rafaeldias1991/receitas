@@ -2,6 +2,7 @@ package com.rafaelchavesdias.receitas.controller.form;
 
 import com.rafaelchavesdias.receitas.model.Receita;
 import com.rafaelchavesdias.receitas.model.Usuario;
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
@@ -12,6 +13,7 @@ import javax.validation.constraints.NotNull;
 
 @Getter
 @Setter
+@Data
 public class UsuarioForm {
 
     @NotNull

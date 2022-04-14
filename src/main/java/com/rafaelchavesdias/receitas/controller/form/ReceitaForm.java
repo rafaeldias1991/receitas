@@ -3,6 +3,7 @@ package com.rafaelchavesdias.receitas.controller.form;
 import com.rafaelchavesdias.receitas.model.Ingrediente;
 import com.rafaelchavesdias.receitas.model.Receita;
 import com.rafaelchavesdias.receitas.model.Usuario;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.validator.constraints.Length;
@@ -13,6 +14,7 @@ import javax.validation.constraints.Size;
 
 @Setter
 @Getter
+@AllArgsConstructor
 public class ReceitaForm {
 
     @NotNull

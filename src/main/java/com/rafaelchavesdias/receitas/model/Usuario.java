@@ -1,5 +1,6 @@
 package com.rafaelchavesdias.receitas.model;
 
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
@@ -20,6 +21,7 @@ import java.util.List;
 @Setter
 @EqualsAndHashCode
 @Document(collection = "user")
+@AllArgsConstructor
 public class Usuario implements UserDetails {
 
     private static final long serialVersionUID = 1L;

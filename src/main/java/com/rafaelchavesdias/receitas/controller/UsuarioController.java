@@ -51,7 +51,6 @@ public class UsuarioController {
         Page<Receita> receitas = receitaService.buscaReceitasPorAutor(nomeAutor, paginacao);
         return ReceitaDto.converter(receitas);
 
-
     }
 
 
